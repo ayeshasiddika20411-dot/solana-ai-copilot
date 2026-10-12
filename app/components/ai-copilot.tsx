@@ -17,7 +17,6 @@ export function AICopilot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Directly read public key from wallet adapter
   const walletAddress = publicKey ? publicKey.toBase58() : 'Not Connected';
 
   async function handleSubmit(e: React.FormEvent) {
@@ -36,7 +35,7 @@ export function AICopilot() {
         body: JSON.stringify({
           message: userMsg,
           walletAddress,
-          cluster: cluster.name,
+          cluster: cluster || 'devnet',
         }),
       });
 
