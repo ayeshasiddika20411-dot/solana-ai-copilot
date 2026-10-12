@@ -1,6 +1,7 @@
 import { ActionsPanel } from '@/app/components/actions/actions-panel';
 import { AICopilot } from '@/app/components/ai-copilot';
 import { JupiterSwapCard } from '@/app/components/jupiter-swap-card';
+import { SolamiMetricsCard } from '@/app/components/solami-metrics-card';
 
 export default function Home() {
   return (
@@ -8,17 +9,18 @@ export default function Home() {
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex flex-col items-center">
         {/* Title & Subtitle */}
         <div className="text-center mb-8 max-w-2xl px-2">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-orange-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
-            Solana AI Copilot & DeFi Terminal
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent">
+            Solana AI Copilot & Solami Terminal
           </h1>
           <p className="text-neutral-500 dark:text-neutral-400 mt-3 text-xs sm:text-sm md:text-base leading-relaxed">
-            Autonomous on-chain Web3 assistant powered by Gemini 3.8 Flash & Jupiter Liquidity Aggregator.
+            Real-time on-chain assistant powered by Gemini 3.8 Flash, Solami High-Speed RPC, and Jupiter Aggregator.
           </p>
         </div>
 
         {/* 2-Column Responsive Layout */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
-          <div className="w-full">
+          <div className="w-full space-y-6">
+            <SolamiMetricsCard />
             <AICopilot />
           </div>
           <div className="w-full space-y-6">
