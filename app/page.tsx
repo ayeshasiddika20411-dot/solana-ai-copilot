@@ -1,30 +1,32 @@
-import { AppHeader } from '@/app/components/app-header';
 import { ActionsPanel } from '@/app/components/actions/actions-panel';
 import { AICopilot } from '@/app/components/ai-copilot';
 import { JupiterSwapCard } from '@/app/components/jupiter-swap-card';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <AppHeader />
-      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center">
-        <div className="text-center mb-6 max-w-2xl">
-          <h1 className="text-3xl font-extrabold sm:text-4xl bg-gradient-to-r from-orange-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
+    <main className="w-full flex flex-col items-center">
+      <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex flex-col items-center">
+        {/* Title & Subtitle */}
+        <div className="text-center mb-8 max-w-2xl px-2">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-orange-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
             Solana AI Copilot & DeFi Terminal
           </h1>
-          <p className="text-neutral-400 mt-2 text-sm">
-            Autonomous on-chain assistant powered by Gemini 3.8 Flash & Jupiter Liquidity Aggregator.
+          <p className="text-neutral-500 dark:text-neutral-400 mt-3 text-xs sm:text-sm md:text-base leading-relaxed">
+            Autonomous on-chain Web3 assistant powered by Gemini 3.8 Flash & Jupiter Liquidity Aggregator.
           </p>
         </div>
 
-        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          <AICopilot />
-          <div className="space-y-6">
+        {/* 2-Column Responsive Layout */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
+          <div className="w-full">
+            <AICopilot />
+          </div>
+          <div className="w-full space-y-6">
             <JupiterSwapCard />
             <ActionsPanel />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

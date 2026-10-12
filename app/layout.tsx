@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web3.js v3 Starter",
+  title: "Solana AI Copilot & DeFi Terminal",
   description:
-    "Wallet connection, Sign In With Solana, and on-chain actions with @solana/web3.js v3 and @solana/wallet-adapter v3",
+    "Autonomous on-chain Web3 AI agent built on Solana Devnet with Jupiter V6 Aggregator and Gemini 3.8 Flash.",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
