@@ -46,7 +46,7 @@ export function ClusterSelect() {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls={isOpen ? "cluster-options" : undefined}
-        className="flex cursor-pointer items-center gap-2 rounded-lg border border-border-low bg-card px-3 py-2 text-xs font-medium transition hover:bg-cream"
+        className="flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-2 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition shadow-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 capitalize"
       >
         <span
           className="h-2 w-2 rounded-full"
@@ -58,7 +58,7 @@ export function ClusterSelect() {
       {isOpen && (
         <div
           id="cluster-options"
-          className="absolute right-0 top-full z-50 mt-2 w-40 rounded-xl border border-border-low bg-card p-2 shadow-lg"
+          className="absolute right-0 top-full z-50 mt-2 w-36 sm:w-40 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-1.5 shadow-xl backdrop-blur-md"
         >
           <div className="space-y-1">
             {CLUSTERS.map((c) => (
@@ -70,8 +70,10 @@ export function ClusterSelect() {
                   triggerRef.current?.focus();
                 }}
                 aria-pressed={c === cluster}
-                className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium transition hover:bg-cream ${
-                  c === cluster ? "bg-cream" : ""
+                className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium transition capitalize ${
+                  c === cluster
+                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-white font-semibold"
+                    : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-white"
                 }`}
               >
                 <span
