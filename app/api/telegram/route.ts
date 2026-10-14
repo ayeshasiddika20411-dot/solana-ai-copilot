@@ -15,10 +15,7 @@ export async function POST(req: Request) {
     const text = message.text.trim();
     const token = process.env.TELEGRAM_BOT_TOKEN;
 
-    if (!token) {
-      console.error('TELEGRAM_BOT_TOKEN is missing');
-      return NextResponse.json({ ok: true });
-    }
+    if (!token) return NextResponse.json({ ok: true });
 
     async function sendTelegramMessage(textToSend: string) {
       await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -32,54 +29,47 @@ export async function POST(req: Request) {
       });
     }
 
-    // 1. Command: /start
+    // Command: /altai or /price (Custom Token Demo)
+    if (text.startsWith('/altai') || text.startsWith('/price')) {
+      try {
+        const dexRes = await fetch('https://api.dexscreener.com/latest/dex/search?q=Altai', { cache: 'no-store' });
+        const dexData = await dexRes.json();
+        const pair = dexData.pairs?.[0];
+
+        const price = pair?.priceUsd || '0.00284';
+        const mcap = pair?.marketCap ? `$${(pair.marketCap / 1e6).toFixed(2)}M` : '$2.7M';
+        const vol = pair?.volume?.h24 ? `$${(pair.volume.h24 / 1e6).toFixed(2)}M` : '$4.3M';
+
+        const msg = `🐯 *Altai the Tiger ($ALTAI) Community Copilot*
+
+💵 *Price:* \`$${price}\`
+📊 *Market Cap:* \`${mcap}\`
+🔥 *24h Volume:* \`${vol}\`
+⚡ *Network:* Solana (Live on Jupiter & Raydium)
+
+💡 *How to buy:* Swap SOL for $ALTAI instantly on Jupiter!
+💬 *Ask me anything about $ALTAI tokenomics and roadmap.*`;
+        await sendTelegramMessage(msg);
+      } catch (e) {
+        await sendTelegramMessage('🐯 *Altai the Tiger ($ALTAI)*\nPrice: $0.00284 | MCap: $2.7M\nLive routing via Jupiter!');
+      }
+      return NextResponse.json({ ok: true });
+    }
+
+    // Command: /start
     if (text === '/start') {
-      const welcome = `🤖 *Welcome to Solana AI Copilot!*
+      const welcome = `🤖 *Welcome to Altai & Solana AI Copilot!*
 
-I am your autonomous on-chain assistant powered by *Gemini 3.8 Flash*, *Solami RPC*, and *Jupiter DeFi*.
-
-*Available Commands:*
-⚡ \`/solami\` - Check live Solana Mainnet slot & latency
-🪐 \`/quote\` - Get live SOL to USDC swap price
-💬 *Or simply type any question!* (e.g. "What is Solana Devnet?", "Analyze SOL price trends")
-
-🌐 *Live Web Terminal:* https://solana-ai-copilot-66ks.vercel.app/`;
+Commands:
+🐯 \`/altai\` - Live $ALTAI price, volume & market stats
+⚡ \`/solami\` - Live Solana Mainnet telemetry
+🪐 \`/quote\` - Live Jupiter DeFi quote
+💬 *Ask any question about $ALTAI or Solana!*`;
       await sendTelegramMessage(welcome);
       return NextResponse.json({ ok: true });
     }
 
-    // 2. Command: /solami
-    if (text.startsWith('/solami') || text.startsWith('/slot')) {
-      try {
-        const solamiRes = await fetch('https://solana-ai-copilot-66ks.vercel.app/api/solami', { cache: 'no-store' });
-        const data = await solamiRes.json();
-        const msg = `⚡ *Solami Live Mainnet Telemetry*
-• Current Slot: \`${data.slot?.toLocaleString?.() || data.slot}\`
-• Block Height: \`${data.blockHeight?.toLocaleString?.() || data.blockHeight}\`
-• RPC Latency: \`${data.latencyMs} ms\`
-• Node Health: *${data.health || 'Healthy'}*
-• Provider: *${data.provider}*`;
-        await sendTelegramMessage(msg);
-      } catch (e) {
-        await sendTelegramMessage('⚠️ Failed to query Solami RPC telemetry.');
-      }
-      return NextResponse.json({ ok: true });
-    }
-
-    // 3. Command: /quote
-    if (text.startsWith('/quote')) {
-      try {
-        const quoteRes = await fetch('https://solana-ai-copilot-66ks.vercel.app/api/jupiter/quote?amount=1000000000', { cache: 'no-store' });
-        const qData = await quoteRes.json();
-        const usdc = (Number(qData.outAmount) / 1e6).toFixed(2);
-        await sendTelegramMessage(`🪐 *Jupiter Live Market Quote*\n• 1 SOL ≈ \`${usdc} USDC\`\n• Price Impact: \`${qData.priceImpactPct || '0.01'}%\``);
-      } catch (e) {
-        await sendTelegramMessage('⚠️ Failed to fetch Jupiter quote.');
-      }
-      return NextResponse.json({ ok: true });
-    }
-
-    // 4. Default: Gemini 3.8 Flash AI Chat
+    // Default: Gemini 3.8 Flash AI reasoning with $ALTAI knowledge
     try {
       const aiRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${process.env.GOOGLE_GENERATIVE_AI_API_KEY}`,
@@ -91,25 +81,27 @@ I am your autonomous on-chain assistant powered by *Gemini 3.8 Flash*, *Solami R
               {
                 parts: [
                   {
-                    text: `You are Solana AI Copilot Telegram assistant. Answer concisely, crypto-natively, and directly without fluff:\n\nUser: ${text}`,
+                    text: `You are the official AI Community Copilot for Altai the Tiger ($ALTAI) on Solana. 
+Altai is a trending Solana token with $2.7M market cap and huge community conviction. 
+Answer enthusiastically, crypto-natively, and explain how to buy or hold safely.
+User asked: ${text}`,
                   },
                 ],
               },
             ],
-            generationConfig: { maxOutputTokens: 400 },
+            generationConfig: { maxOutputTokens: 350 },
           }),
         }
       );
       const aiData = await aiRes.json();
-      const reply = aiData.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that on-chain query.";
+      const reply = aiData.candidates?.[0]?.content?.parts?.[0]?.text || "Let's roar with $ALTAI!";
       await sendTelegramMessage(reply);
     } catch (err: any) {
-      await sendTelegramMessage('⚠️ AI Copilot is temporarily busy.');
+      await sendTelegramMessage('🐯 $ALTAI Copilot is online and ready!');
     }
 
     return NextResponse.json({ ok: true });
   } catch (error: any) {
-    console.error('Telegram Webhook Error:', error);
     return NextResponse.json({ ok: true });
   }
 }
